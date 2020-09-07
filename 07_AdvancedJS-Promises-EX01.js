@@ -29,7 +29,19 @@ For now, we're going to focus on the mechanisms for making promises.
     Exercise 1
     Use Promise.resolve(value) to create a promise that will resolve
     with the value 3.
+    new Promise ...
 */
+
+let promise = new Promise ( // create a promise
+    function ( resolve ) { // create a promise
+        resolve(3); // that will resolve with the value 3
+    }
+);
+
+// Golf:
+// let promise = Promise.resolve(3);
+
+promise.then( value => { console.log(value) })
 
 /*
     Exercise 2
@@ -37,19 +49,61 @@ For now, we're going to focus on the mechanisms for making promises.
     string "Boo!"
 */
 
+promise = new Promise ( // create a promise
+    function ( resolve, reject ) { // create a promise
+        reject("Boo!"); // reject with the string "Boo!"
+    }
+);
+
+// Golf:
+// let promise = Promise.resolve(3);
+
+promise.catch( error => { console.log(error) })
+
 /*
 Exercise 3
 
-You have the outline of a function makePromiseWithConstructor(itShouldResolve)
+You have the outline of a function
+    makePromiseWithConstructor(itShouldResolve)
 
 Use the Promise constructor to create a promise that will:
 
     resolve if itShouldResolve is truthy
-    reject if itShouldResolve is falsy
+    reject  if itShouldResolve is falsy
 */
+
+function makePromiseWithConstructor(itShouldResolve){
+    return new Promise(
+        (resolve,reject)=> {
+            if ( itShouldResolve ) resolve();
+            else                   reject()
+        }
+    )
+}
+
+// truthy =: NOT ANY OF false | 0 | '' | null | undefined
+makePromiseWithConstructor('yes')
+.then( ()=> console.log('it resolved') )
+
+// falsy =: false | 0 | '' | null | undefined
+makePromiseWithConstructor(0)
+.catch( ()=> console.log('it rejected') )
 
 /*
-Exercise 4
-
-This is a common use of the Promise constructor. If you want to simulate waiting for a value, a common technique is to create a function like the following. It simply accepts a value, and a delayInMs, then returns a promise that will resolve with that value after that delay.
+    Exercise 
+    This is a common use of the Promise constructor. If you want to simulate waiting
+    for a value, a common technique is to create a function like the following.
+    It simply accepts a value, and a delayInMs, then returns a promise that will
+    resolve with that value after that delay.
 */
+
+function PromisedValue ( value, delayInMs ){ // It simply accepts a value, and a delayInMs
+    return new Promise(
+        ( resolve )=> {
+            setTimeout( function() { resolve(value) } , delayInMs)
+        }
+    );
+}
+
+PromisedValue(42,1000)
+.then( value => console.log('promised', value) )
