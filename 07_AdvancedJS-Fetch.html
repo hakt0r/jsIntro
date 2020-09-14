@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Stocks</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo
+    //                                  ^ GET REQUEST
+    async function init () {
+        //
+
+        const      url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=IBM&interval=5min&apikey=demo";
+        const response = await fetch(url);
+        const     data = await response.json();
+
+        console.log(data["Meta Data"]["2. Symbol"]);
+
+        // 
+        const weatherApiKey = "1b4a68e7fe30c15b20f94c73fc06d9f8";
+        const          city = "Mumbai";
+        const          url1 = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherApiKey}`;
+
+        const response1 = await fetch(url1);
+        const     data1 = await response1.json();
+
+        console.log( Math.round( data1.main.temp     - 273.15 ) );
+        console.log( Math.round( data1.main.temp_min - 273.15 ) );
+        console.log( Math.round( data1.main.temp_max - 273.15 ) );
+
+        // 
+        const weatherApiKey1 = "1b4a68e7fe30c15b20f94c73fc06d9f8";
+        const          city1 = "Mumbai";
+        const          url2 = `https://api.openweathermap.org/data/2.5/weather`;
+
+        const     jsonBody = { q:city1, appid:weatherApiKey1 };
+        const   stringBody = JSON.stringify(jsonBody);
+        const configObject = { method:"POST", body: stringBody };
+
+        const    response2 = await fetch(url2,configObject);
+        const        data2 = await response2.json();
+
+        console.log( Math.round( data2.main.temp     - 273.15 ) );
+        console.log( Math.round( data2.main.temp_min - 273.15 ) );
+        console.log( Math.round( data2.main.temp_max - 273.15 ) );  
+    }
+    init();
+</script>
+</html>
