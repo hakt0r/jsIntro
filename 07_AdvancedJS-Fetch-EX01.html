@@ -4,19 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fetch Corona Data</title>
+    <style>
+        * {
+            background: black;
+            color: green;
+            font-family: monospace;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    
 </body>
 <script>
-    async function init () {
+    async function getCountry ( country = "Germany" ) {
+        const opts = {
+            headers: {
+                "x-rapidapi-host": "covid-19-data.p.rapidapi.com",
+                "x-rapidapi-key": "f97891a905mshc085523aa853408p18ae15jsn5cefca802f71"
+            }
+        };
+        
+        const      url = `https://covid-19-data.p.rapidapi.com/country?format=json&name=${country}`;
+        const response = await fetch(url, opts);
 
-        const      url = "";
-        const response = await fetch(url);
+        console.log(response);
+
         const     data = await response.json();
 
         console.log(data);
+        console.log(data[0].deaths);
 
+        const h1 = document.createElement('h1');
+              h1.innerText = data[0].country;
+
+        const confirmed = document.createElement('div');
+              confirmed.innerText = "confirmed: " + data[0].confirmed;
+
+        const critical = document.createElement('div');
+              critical.innerText = "critical: " + data[0].critical;
+
+        const deaths = document.createElement('div');
+              deaths.innerText = "Deaths: " + data[0].deaths;
+
+        document.body.append(h1);
+        document.body.append(confirmed);
+        document.body.append(critical);
+        document.body.append(deaths);
+    }
+    function Sleep ( ms ){
+        return new Promise( resolve => setTimeout( resolve, ms ) );
+    }
+    async function init(){
+        document.body.innerHTML = "";
+        getCountry("Germany");
+        await Sleep(2000);
+        getCountry("USA");
+        await Sleep(2000);
+        getCountry("Brazil");
+        await Sleep(2000);
     }
     init();
 </script>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Corona Data</title>
+    <style>
+        * {
+            background: black;
+            color: green;
+            font-family: monospace;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+</body>
+<script>
+    async function getCurrency ( fromCurrency = "ETH", toCurrency = "EUR" ) {
+
+        const        key = "KS83EIH10ASG1URC";
+        const        url = `https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${fromCurrency}&to_currency=${toCurrency}&apikey=${key}`;
+        const   response = await fetch(url);
+
+        console.log(response);
+
+        const     data = await response.json();
+
+        console.log(data);
+
+        const h1 = document.createElement('h1');
+              h1.innerText = fromCurrency + " => " + toCurrency;
+
+        const value = Number(data["Realtime Currency Exchange Rate"]["5. Exchange Rate"]).toFixed(2);
+
+        const rate = document.createElement('div');
+              rate.innerText = `Rate: ${value} ${toCurrency}`;
+
+        document.body.append(h1);
+        document.body.append(rate);
+    }
+    function Sleep ( ms ){
+        return new Promise( resolve => setTimeout( resolve, ms ) );
+    }
+    async function init(){
+        document.body.innerHTML = "";
+        getCurrency("BTC","EUR");
+        getCurrency("ETH","EUR");
+        getCurrency("XMR","EUR");
+    }
+    init();
+</script>
+</html>
