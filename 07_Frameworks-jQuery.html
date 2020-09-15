@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery</title>
+    <script
+        src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+        crossorigin="anonymous"
+    ></script>
+</head>
+<body>
+    <div class="demo">
+
+    </div>
+    <h1>Why do or did people use jQuery</h1>
+    <h2>Unified access via $ function</h2>
+        Honestly it's shorter to write $ instead of document.querySelectorAll,
+        or addEventListener. Also things are in one spot.
+    <h2>Makes selecting elements easier</h2>
+        Before querySelectorAll it provided the same functionality
+        <code>
+            $('div')
+            $('div:nth-of-type(5)')
+        </code>
+    <h2>Easy AJAX</h2>
+        <code>
+            $.ajax({url:"...",success:data=>{}})
+            $.get(url,onsuccess())
+            $.post(url,{data},onsuccess())
+        </code>
+    <h2>Simple DOM manipulation and creation</h2>
+        <code>
+            $('div').remove() // removes all divs
+            $('.some-div').html(`<b>Hello!</b>`)
+        </code>
+    <h2>Simple event listener handling</h2>
+        <code>
+            let handler = event => console.log(event);
+            $('div').on ( 'click', handler )
+            $('div').off( 'click', handler )
+            $('div').off( 'click' )
+        </code>
+    <h2>Let's see if we can write this on our own...</h2>
+        <code>
+            const $ = document.querySelectorAll; // quick shortcut
+
+            function $ ( selector ){
+                const  list = document.querySelectorAll( selector );
+                list.each   = list.forEach; 
+                list.remove = list.forEach( item => item.remove() )
+                return list;
+            }
+
+            $.ajax = async ({url,success}) => {
+                let response = await fetch(url);
+                let     data = await response.json();
+                success(data);
+            }
+        </code>
+</body>
+<script>
+
+    $('div.demo')
+        .html('jQuery')
+        .html('chained')
+        .on('click', e => chained alert('hello') )
+
+</script>
+</html>
