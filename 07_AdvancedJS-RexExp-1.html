@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regular Expressions 1</title>
+</head>
+<body>
+    <input id="quickSearch" value="e" /><br/>
+
+    <div>asdd</div>
+    <div>dsaf asdf</div>
+    <div>getgr</div>
+    <div>egt get e</div>
+    <div>rtyjr</div>
+    <div>werer</div>
+    <div>werewr</div>
+    <div>jhkgh</div>
+    <div>wqeewq</div>
+    <div>Lorem ipsum dolor sit ame</div>
+
+</body>
+<script>
+    const search  = document.getElementById('quickSearch');
+    const allDivs = Array.from( document.querySelectorAll('div') );
+    search.onkeyup = () => {
+        const filtered = allDivs.filter(
+            div => div.innerText.match( search.value )
+        )
+        allDivs .forEach( div => div.style.display = 'none' );
+        filtered.forEach( div => div.style.display = 'block' );
+    }
+</script>
+</html>
