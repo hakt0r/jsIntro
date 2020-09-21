@@ -22,3 +22,4 @@
 "asd".match( /^[as]/ )   // true
 "asd".match( /^[as]+/ )  // true
 "asd".match( /^[as]+$/ ) // false
+"asd".match( /^[as]*$/ ) // true
