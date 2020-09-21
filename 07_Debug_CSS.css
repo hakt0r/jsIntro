@@ -1,0 +1,28 @@
+
+div {
+    font-weight: bolder;
+    font-size: 28px;
+    color: gray;
+    padding: 10px;
+    border: solid black 1px;
+    margin: 2px;
+    border-radius: 20vmin;
+}
+
+body {
+    display: flex;
+    flex-flow: wrap;
+    justify-content: center;
+}
+
+.breadcrumb {
+    display: block;
+    flex-wrap: unset;
+    border: 12px green solid;
+    filter: drop-shadow(black 1px 1px 2px);
+}
+
+ul.breadcrumb > li > span.divider {
+    font-weight: bolder;
+    filter: drop-shadow(black 1px 1px 2px);
+}
