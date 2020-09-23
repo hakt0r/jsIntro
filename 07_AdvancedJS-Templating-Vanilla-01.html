@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempelate Literals for HTML-win</title>
+</head>
+<style>
+    .window {
+        border: solid gray 1px;
+        border-radius: 5px;
+        padding: 5px;
+    }
+</style>
+<body></body>
+<script>
+    function CreateHTML( html ){
+        // This function turns a html string into DOM elements
+        // it return a document fragment that can be inserted anywhere
+        const       div = document.createElement('div');
+                    div.innerHTML = html;
+        const  fragment = document.createDocumentFragment();
+        div.childNodes.forEach( node => fragment.appendChild(node) ); // TODO: figure out why
+        div.childNodes.forEach( node => fragment.appendChild(node) ); // we have to append twice
+        return fragment;
+    }
+
+    function LoginWindow ( message = "Login" ) {
+        const html = `
+        <div class="window" id="login">
+            <b>${message}</b>
+            <input type="text"     min="3" max="32"  name="user"/>
+            <input type="password" min="4" max="255" name="pass"/>
+            <button type="reset">Close</button>
+            <button type="submit">Login</button>
+        </div>`; // make sure ${interpolations} come from consts inside of
+                 // YOUR code. This pattern can be used to spy on your user
+                 // up to the point where it compromises the whole system.
+        const fragment     = CreateHTML(html);
+        const frame        = fragment.querySelector('div#login');
+        const loginButton  = fragment.querySelector('button[type="submit"]');
+        const cancelButton = fragment.querySelector('button[type="reset"]');
+        const userField    = fragment.querySelector('input[name="user"]');
+        const passField    = fragment.querySelector('input[name="pass"]');
+        loginButton.onclick = e => {
+            if ( userField.value.trim() === '' ){
+                userField.style.border = 'solid red 1px';
+                return;
+            }
+            alert(`login pressed ${userField.value} : ${passField.value}`);
+            frame.remove();
+        }
+        cancelButton.onclick = e => { frame.remove(); }
+        document.body.append( fragment );
+    }
+
+    LoginWindow('Test');
+</script>
+</html>
