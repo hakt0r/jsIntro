@@ -35,8 +35,9 @@
         }
         static sell(boughtStock){
             // ... calculate new cash
-            // ... remove from Stocks
+            Portfolio.stocks.splice( Portfolio.stocks.indexOf(boughtStock), 1 );
             // ... updates localStorage
+            Portfolio.renderList();
         }
         // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
         static renderList(){
