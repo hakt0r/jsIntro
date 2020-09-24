@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handlebars Literals for HTML-win</title>
+    <script
+        src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    </head>
+<body>
+    <div class="menu"></div>
+    <div class="portfolio">
+        <span class="cash">1231231</span>
+        <ul class="stocks"></ul>
+    </div>
+</body>
+<script>
+    // this happened before
+    localStorage.setItem('portfolio',JSON.stringify([
+        {symbol:'aapl',quantity:10,price:123},
+        {symbol:'ibm', quantity:30,price:102},
+        {symbol:'aapl',quantity:20,price:232}
+    ]));
+    // its just mock data, ignore it :D
+
+    // happens when the page is loaded
+    Portfolio.load()
+
+    // these are the classes used
+    class Portfolio {
+        static stocks = [];
+        static load(){
+            const  list = JSON.parse(localStorage.getItem('portfolio'));
+            this.stocks = list.map( data => new BoughtStock(data) );
+        }
+        static sell(boughtStock){
+            // ... calculate new cash
+            // ... remove from Stocks
+            // ... updates localStorage
+        }
+        // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+        static renderList(){
+            const ul = $('div.portfolio ul.stocks');
+            ul.html(''); // clear the ul in case there is something
+                         // == ul.innerHTML = ""
+            Portfolio.stocks.forEach( stock => {
+                ul.append( stock.renderListItem() );
+            });
+        }
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    }
+
+    class Stock {
+        symbol       = String
+        currentPrice = Number
+        history      = []
+        constructor(symbol){
+            this.symbol = symbol;
+            this.currentPrice = Math.random() *  500;
+            this.history = [
+                Math.random() *  500,
+                Math.random() *  500,
+                Math.random() *  500,
+                Math.random() *  500
+            ];
+        }
+    }
+
+    class BoughtStock extends Stock {
+        quantity = Number
+        price    = Number
+        constructor({symbol,quantity,price}){
+            super(symbol);
+            this.quantity = quantity;
+            this.price    = price;
+        }
+        // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+        renderListItem(){
+            const BoughtStockListTemplate = Handlebars.compile(`
+            <li>
+                <span class="symbol">{{symbol}}</span>
+                <span class="currentPrice">{{currentPrice}}</span>
+                <span class="currentValue">{{currentValue}}</span>
+                <span class="price">{{price}}</span>
+                <span class="quantity">{{quantity}}</span>
+                <button class="sell">Sell</button>
+            </li>`);
+            const html = BoughtStockListTemplate({
+                symbol:       this.symbol,
+                quantity:     this.quantity,
+                price:        this.price,
+                currentPrice: this.currentPrice,
+                currentValue: this.quantity * this.currentPrice
+            });
+            const elements = $(html);
+            const     sell = elements.find('button.sell');
+            sell.click( e => Portfolio.sell(this) );
+            return elements;
+        }
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    }
+
+</script>
+</html>
