@@ -13,8 +13,13 @@ const obj = {
 }
 
 Object.keys(obj)    // ['Apple','IBM','Microsoft']
+for ( let key in obj ){ }
+
 Object.values(obj)  // [123,432,213]
+for ( let key of obj ){ }
+
 Object.entries(obj) // [['Apple',123],['IBM',432],['Microsoft',213]]
+for ( let key in obj ){ const value = obj[key]; }
 
 // Converting the data into a Table:
 // <table>
@@ -24,8 +29,7 @@ Object.entries(obj) // [['Apple',123],['IBM',432],['Microsoft',213]]
 
 let aTable = document.createElement('table');
 
-aTable.innerHTML = Object
-.entries ( obj )
+aTable.innerHTML = Object // <<<<<<<<<<<< BAD innerHTML, insecure DON'T USE
 .filter  ( ( [key]       ) => key !== 'IBM' )
 .map     ( ( [key,value] ) => `<tr><td>${key}</td><td>${value}</td></tr>` )
 .join    ( '' )
@@ -74,10 +78,11 @@ const filteredObj = {};
 
 Object
 .entries(obj)
-.filter( ([key,value])=> {
+.forEach( ([key,value])=> {
     if ( ! key.toLowerCase().includes( 'i' ) ){
-    filteredObj[key] = value;
-}});
+        filteredObj[key] = value;
+    }
+});
 
 // render with handlebars
 let template = Handlebars.compile(`
@@ -120,7 +125,8 @@ let tempHumidCurve = apiReply.map(
 );
 
 let tempHumidCurve = apiReply.map(
-    humidity => ({ h:humidity.h, t:humidity.t })
+    humidity => ({ h:humidity.h, t:humidity.t }) // << need to add round braces
+                                                 // because using {} would be ambiguous
 );
 
 let tempHumidCurve = apiReply.map( ({h,t}) => ({t,h}) );
@@ -181,3 +187,7 @@ const diagonalNumbers = ridiculousResponse
 
 const reverseDiagonalNumbers = ridiculousResponse
 .map( (data,index) => data.t[data.t.length - index - 1] );
+
+// sawtooth
+const reverseDiagonalNumbers = ridiculousResponse
+.map( (data,index) => data.t[data.t.length - ( index % data.t.length ) - 1] );
