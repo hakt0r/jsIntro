@@ -1,3 +1,4 @@
+let template;
 
 const obj = {
     Apple:     { price: 123, change: -4 },
@@ -5,7 +6,24 @@ const obj = {
     Microsoft: { price: 213, change: 23 }
 }
 
-// 1. Traverse the Object and RENDER the highest Price value
+// 1. Traverse the Object and ...
+
+const highestPrice = Object
+.entries( obj )
+.reduce( ( last, [key,{price}] )=> Math.max( last, price ) , -Infinity );
+//                                 last > price ? last : price
+
+// ... RENDER the highest Price value
+
+template = Handlebars.compile(`
+<h2>1.1. Highest Price</h2>
+<div class="box">
+    {{highestPrice}}
+</div>
+`);
+
+$('body').append( template({highestPrice}) );
+
 // 2. RENDER all keys as a String
 // 3. RENDER a TABLE
 
@@ -24,6 +42,27 @@ const apiReply = [
     { t: 18, h: 41, r:61 },
     { t: 2,  h: 68, r:44 },
 ];
+
+
+let sum = apiReply.reduce(function (sum, temp) {
+    console.log(apiReply.length);
+    return {
+        t: sum.t + temp.t,
+        h: sum.h + temp.h,
+        r: sum.r + temp.r,
+    };
+});
+
+let length = apiReply.length;
+let key = "";
+let avg = Object.keys(sum).map((value) => {
+    console.log(sum[value]);
+    key = sum[key];
+    console.log(key);
+    return { key: sum[value] / length };
+});
+
+console.log(avg);
 
 // 1. RENDER the average temperature, humidity, rain probability
 // 2. RENDER the HIGH and LOW temperatures
