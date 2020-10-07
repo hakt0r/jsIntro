@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        background-color: black;
+    }
+    * {
+        color: green;
+        font-family: monospace;
+    }
+    h2 { text-align: center;}
+    div, input, button {
+        padding: 1em;
+        border: solid green 2px;
+        border-radius: 1em;
+        width: 60ch;
+        margin: auto;
+        filter: drop-shadow( green 0px 0px 4px );
+        margin-bottom: 0.5em;
+        box-sizing: border-box;
+    }
+    input, button {
+        width: 100%;
+    }
+    .invalid {
+        border: solid red 2px;
+        color: red;
+        filter: drop-shadow( red 0px 0px 4px );
+    }
+    .error {
+        display: none;
+        color: red;
+    }
+    button:disabled{
+        background-color: red;
+    }
+</style>
+<body>
+    <div id="signup">
+        <input type="text"     name="name"            placeholder="name" />
+        <p class="error name">Your name must have first and last name!</p>
+        <input type="number"   name="age"             placeholder="age" />
+        <p class="error age">You must be older than 16 or younger than 80!</p>
+        <input type="email"    name="email"           placeholder="email" />
+        <p class="error email">Your eMail does not look correct!</p>
+        <input type="password" name="password"        placeholder="password" class="invalid"/>
+        <p class="error password">Needs 11 chars, upper-, lowercase, numbers, special chars!</p>
+        <input type="password" name="password_repeat" placeholder="password_repeat" />
+        <p class="error repeat">Your passwords do not match!</p>
+        <button name="signup" disabled>Signup</button>
+    </div>
+    <script>
+        // const [ name, age, email, password, password_repeat, signup ] =
+        // ['name','age','email','password','password_repeat','signup'].map(
+        //     name => document.querySelector(`[name="${name}"]`)
+        // );
+        const name            = document.querySelector('[name="name"]');
+        const name_error      = document.querySelector('.error.name');
+        const age             = document.querySelector('[name="age"]');
+        const age_error       = document.querySelector('.error.age');
+        const email           = document.querySelector('[name="email"]');
+        const email_error     = document.querySelector('.error.email');
+        const password        = document.querySelector('[name="password"]');
+        const password_error  = document.querySelector('.error.password');
+        const password_repeat = document.querySelector('[name="password_repeat"]');
+        const repeat_error    = document.querySelector('.error.repeat');
+        const signup          = document.querySelector('[name="signup"]');
+
+        function checkAll (){
+            const invalids = document.querySelectorAll('.invalid');
+            if ( invalids.length > 0 ){
+                signup.setAttribute('disabled','true');
+            } else {
+                signup.removeAttribute('disabled');
+            }
+        }
+
+        checkAll();
+
+        name.oninput = (e)=> {
+            const value = name.value; // e.target.value;
+            if ( ! value.match(/[A-Z][a-z]+ [A-Z][a-z]+/) ){
+                name.classList.add('invalid');
+                name_error.style.display = 'unset';
+            } else {
+                name.classList.remove('invalid');
+                name_error.style.display = null;
+            } 
+            checkAll();
+        }
+
+        age.oninput  = (e)=> {
+            const value = Number(age.value); // e.target.value;
+            if ( value < 16 || value > 80 ){
+                age.classList.add('invalid');
+                age_error.style.display = 'unset';
+            } else {
+                age.classList.remove('invalid');
+                age_error.style.display = null;
+            }
+            checkAll();
+        }
+
+        email.oninput = (e)=> {
+            const value = email.value; // e.target.value;
+            if ( ! value.match(/^[^\s]+@[^\s]+\.[a-z]+$/) ){
+                email.classList.add('invalid');
+                email_error.style.display = 'unset';
+            } else {
+                email.classList.remove('invalid');
+                email_error.style.display = null;
+            }
+            checkAll();
+        }
+
+        password.oninput = (e)=> {
+            const value     = password.value; // e.target.value;
+            const other     = password_repeat.value;
+            const length    = value.length >= 11;
+            const lowerCase = value.match(/[a-z]/);
+            const upperCase = value.match(/[A-Z]/);
+            const numbers   = value.match(/[0-9]/);
+            const specials  = value.match(/[^0-9a-zA-Z]/);
+            if ( ! ( length && lowerCase && upperCase && numbers && specials ) ){
+                password.classList.add('invalid');
+                password_error.style.display = 'unset';
+            } else {
+                password.classList.remove('invalid');
+                password_error.style.display = null;
+            }
+            if ( value.length > 0 && other != value  ){
+                password_repeat.classList.add('invalid');
+                repeat_error.style.display = 'unset';
+            } else {
+                password_repeat.classList.remove('invalid');
+                repeat_error.style.display = null;
+            }
+            checkAll();
+        }
+
+        password_repeat.oninput = (e)=> {
+            const other = password.value;
+            const value = password_repeat.value; // e.target.value;
+            if ( value.length > 0 && other != value  ){
+                password_repeat.classList.add('invalid');
+                repeat_error.style.display = 'unset';
+            } else {
+                password_repeat.classList.remove('invalid');
+                repeat_error.style.display = null;
+            }
+            checkAll();
+        }
+
+</script>
+</body>
+</html>
