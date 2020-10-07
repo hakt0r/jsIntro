@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js" integrity="sha512-zT3zHcFYbQwjHdKjCu6OMmETx8fJA9S7E6W7kBeFxultf75OPTYUJigEKX58qgyQMi1m1EgenfjMXlRZG8BXaw==" crossorigin="anonymous"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs="
+        crossorigin="anonymous"></script>
+</head>
+<style>
+    body {
+        background-color: black;
+    }
+    * {
+        color: green;
+        font-family: monospace;
+    }
+    h2 { text-align: center;}
+    #signup, input, button {
+        padding: 1em;
+        border: solid green 2px;
+        border-radius: 1em;
+        width: 60ch;
+        margin: auto;
+        filter: drop-shadow( green 0px 0px 4px );
+        margin-bottom: 0.5em;
+        box-sizing: border-box;
+        margin-top: 1em;
+    }
+    input, button {
+        width: 100%;
+    }
+    .invalid {
+        border: solid red 2px;
+        color: red;
+        filter: drop-shadow( red 0px 0px 4px );
+    }
+    .error {
+        display: none;
+        color: red;
+    }
+    button:disabled{
+        background-color: red;
+    }
+</style>
+<body>
+    <div id="signup">
+        <button name="signup" disabled>Signup</button>
+    </div>
+    <script>
+        const Fields = {
+            name:{
+                error:"Your name must have first and last name!",
+                type:"text",
+                check: (e)=> ! e.target.value.match(/[A-Z][a-z]+ [A-Z][a-z]+/),
+                default: 'Sa Sa'
+            },
+            age:{
+                error:"You must be older than 16 or younger than 80!",
+                type:"number",
+                check: (e)=> {
+                    const value = Number(e.target.value);
+                    return value < 16 || value > 80
+                },
+                default: 22
+            },
+            email:{
+                error:"Your eMail does not look correct!",
+                type:"email",
+                check: (e)=> ! e.target.value.match(/^[^\s]+@[^\s]+\.[a-z]+$/),
+                default: "a@a.de"
+            },
+            password:{
+                error:"Needs 11 chars, upper-, lowercase, numbers, special chars!",
+                type:"password",
+                className:"invalid",
+                check: (e)=> {
+                    const value     = e.target.value;
+                    const other     = Fields.password_repeat.input.val();
+                    const length    = value.length >= 11;
+                    const lowerCase = value.match(/[a-z]/);
+                    const upperCase = value.match(/[A-Z]/);
+                    const numbers   = value.match(/[0-9]/);
+                    const specials  = value.match(/[^0-9a-zA-Z]/);
+                    const matches   = Fields.password_repeat.input.trigger('input',e);
+                    return ! ( matches && length && lowerCase && upperCase && numbers && specials );
+                },
+                default: "Aa2$aaaaaaaaaaa"
+            },
+            password_repeat:{
+                error:"Your passwords do not match!",
+                type:"password",
+                className:"invalid",
+                check: (e)=> {
+                    const other = Fields.password.input.val();
+                    const value = Fields.password_repeat.input.val();
+                    return value.length > 0 && other != value;
+                },
+                default: "Aa2$aaaaaaaaaaa"
+            }
+        };
+
+        const FieldTemplate = Handlebars.compile(
+        `<div id="{{name}}">
+            <input type="{{type}}" class="{{className}}"/>
+            <p class="error">{{error}}</p>
+        </div>`);
+
+        const signup = $('#signup');
+
+        Object.entries(Fields).forEach(
+            ([name,spec]) => {
+                const { error, type, className, check } = spec;
+                const html = $( FieldTemplate({ name, error, type, className }) );
+                spec.input = html.find('input');
+                spec.error = html.find('p');
+                // spec.input.val(spec.default)
+                spec.input.attr('placeholder',name);
+                spec.input.on('input', e => {
+                    if ( check(e) ){
+                        spec.input.addClass('invalid');
+                        spec.error.css('display','unset');
+                    } else {
+                        spec.input.removeClass('invalid');
+                        spec.error.css('display','none');
+                    }
+                    checkAll();
+                });
+                signup.append(html);
+            }
+        );
+
+        function checkAll (){
+            const invalids = document.querySelectorAll('.invalid');
+            if ( invalids.length > 0 ){
+                signup.find('button').attr('disabled','true');
+            } else {
+                signup.find('button').removeAttr('disabled');
+            }
+        }
+
+        checkAll();
+
+</script>
+</body>
+</html>
